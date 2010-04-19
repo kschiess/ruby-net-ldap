@@ -1,0 +1,25 @@
+# To run all integration tests, rename this file into ldap.yml and complete
+# connection details of at least the 'admin' connection. Since we're testing
+# both read and write access, DATA WILL GET DESTROYED. Don't use this on a
+# production server. 
+#
+# A typical entry in here will look like this: 
+#
+#   connection_name:
+#     settings:     # the actual connection settings, see Net::LDAP.new
+#       host: some_host
+#       base: dc=example,dc=com
+#       auth: 
+#         method: simple
+#         username: cn=admin
+#         password: admin
+#
+
+admin:
+  settings: 
+    host: some_host
+    base: dc=example,dc=com
+    auth: 
+      method: simple
+      username: cn=admin
+      password: admin

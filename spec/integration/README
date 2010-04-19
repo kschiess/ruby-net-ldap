@@ -1,0 +1,3 @@
+
+The integration specs in this directory require a connection to an LDAP
+server to work. Please see spec/ldap.yml.template for how to set this up.
