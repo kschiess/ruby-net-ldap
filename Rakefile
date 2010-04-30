@@ -14,7 +14,7 @@ MANIFEST    = File.read("Manifest.txt").split
 MINRUBY     = "1.8.7"
 
 Hoe.plugin :git
-Hoe.spec PKG_NAME do
+Hoe.spec PKG_NAME do |spec|
   self.version = PKG_VERSION
   self.rubyforge_name = PKG_NAME
 
@@ -122,3 +122,23 @@ end
 
 desc "Run a full set of integration and unit tests" 
 task :cruise => [:test, :spec]
+
+# Developers wont be able to run integration tests on all machines. This
+# removes the hoe generated :spec task and recreates it to be an alias for 
+# spec:unit
+Rake.clear_tasks('spec')
+desc "All quick running specifications"
+task :spec => 'spec:unit'
+
+namespace :spec do
+  %w(integration unit).each do |spec_group|
+    desc "Run specifications below #{spec_group}"
+    Spec::Rake::SpecTask.new(spec_group) do |t|
+      t.spec_files = FileList["spec/#{spec_group}/**/*_spec.rb"]
+      t.spec_opts = ['--options', 'spec/spec.opts']
+    end
+    
+    desc "Run all specifications"
+    task :all => "spec:#{spec_group}"
+  end
+end
