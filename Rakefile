@@ -121,7 +121,7 @@ task :build_manifest do |t|
 end
 
 desc "Run a full set of integration and unit tests" 
-task :cruise => [:test, :spec]
+task :cruise => [:test, 'spec:all']
 
 # Developers wont be able to run integration tests on all machines. This
 # removes the hoe generated :spec task and recreates it to be an alias for 
