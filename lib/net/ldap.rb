@@ -808,20 +808,10 @@ class Net::LDAP
   #    ldap.add(:dn => dn, :attributes => attr)
   #  end
   def add(args)
-    if @open_connection
-      @result = @open_connection.add(args)
-    else
-      @result = 0
-      begin
-        conn = Connection.new(:host => @host, :port => @port,
-                              :encryption => @encryption)
-        if (@result = conn.bind(args[:auth] || @auth)) == 0
-          @result = conn.add(args)
-        end
-      ensure
-        conn.close if conn
-      end
+    @result = open_connection(args[:auth]) do |conn|
+      conn.add(args)
     end
+    
     @result == 0
   end
 
@@ -1093,6 +1083,44 @@ class Net::LDAP
   def paged_searches_supported?
     @server_caps ||= search_root_dse
     @server_caps[:supportedcontrol].include?(Net::LDAP::LdapControls::PagedResults)
+  end
+
+  #---------- Internal methods
+
+  # Executes the block with a connection to the configured ldap server. The 
+  # return value from the block is returned, with one exception: When the bind
+  # fails, the result of the bind operation is returned. 
+  #
+  # This method supports two strategies of operation: Either the user wraps
+  # our code in an #open call (which assigns @open_connection), which we'll 
+  # reuse OR the the user doesn't do anything, in which case we'll open the
+  # connection and close it. 
+  # 
+  # NOTE: This is a common idiom in the code base and should be only in one
+  # place. This is the place. 
+  #
+  # Example: 
+  #   open_connection(args[:auth]) { |c| c.add(args) }
+  #
+  def open_connection(auth_args=nil) # :nodoc:
+    if @open_connection
+      return yield(@open_connection)
+    else
+      conn = Connection.new(:host => @host, :port => @port,
+                            :encryption => @encryption)
+        
+      # assert: conn != nil
+      begin
+        # Try to bind and return that failure if there is one.
+        result = conn.bind(auth_args || @auth)
+        return result unless result == 0
+        
+        # Return the result of the operation (block is transparent)
+        return yield(conn)
+      ensure
+        conn.close
+      end
+    end
   end
 end # class LDAP
 
@@ -1500,8 +1528,24 @@ class Net::LDAP::Connection #:nodoc:
     pkt = [next_msgid.to_ber, request].to_ber_sequence
     @conn.write pkt
 
-    (be = @conn.read_ber(Net::LDAP::AsnSyntax)) && (pdu = Net::LDAP::PDU.new(be)) && (pdu.app_tag == 9) or raise Net::LDAP::LdapError, "response missing or invalid"
+    pdu = read_pdu(9)
     pdu.result_code
+  end
+  
+  # Decodes an answer and returns a Net::LDAP::PDU instance for it. 
+  #
+  def read_pdu(app_tag)
+    be = @conn.read_ber(Net::LDAP::AsnSyntax) or error("Could not decode answer.")
+    pdu = Net::LDAP::PDU.new(be)              or error("Can't parse PDU.")
+    pdu.app_tag == app_tag                    or error("Invalid response, unexpected tag #{pdu.app_tag}.")
+    
+    pdu
+  end
+  
+  # Raises an Net::LDAP::LdapError. 
+  #
+  def error(message)
+    raise Net::LDAP::LdapError, message
   end
 
   #--
