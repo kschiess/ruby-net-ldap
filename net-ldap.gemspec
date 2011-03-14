@@ -1,4 +1,3 @@
-(in /Users/kschiess/git/own/ruby-net-ldap)
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
