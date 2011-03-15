@@ -995,20 +995,10 @@ class Net::LDAP
   #  dn = "mail=deleteme@example.com, ou=people, dc=example, dc=com"
   #  ldap.delete :dn => dn
   def delete(args)
-    if @open_connection
-      @result = @open_connection.delete(args)
-    else
-      @result = 0
-      begin
-        conn = Connection.new(:host => @host, :port => @port,
-                              :encryption => @encryption)
-        if (@result = conn.bind(args[:auth] || @auth)) == 0
-          @result = conn.delete(args)
-        end
-      ensure
-        conn.close
-      end
+    @result = open_connection(args) do |conn|
+      conn.delete(args)
     end
+    
     @result == 0
   end
 
@@ -1577,7 +1567,7 @@ class Net::LDAP::Connection #:nodoc:
     pkt = [next_msgid.to_ber, request].to_ber_sequence
     @conn.write pkt
 
-    (be = @conn.read_ber(Net::LDAP::AsnSyntax)) && (pdu = Net::LDAP::PDU.new(be)) && (pdu.app_tag == 11) or raise Net::LDAP::LdapError, "response missing or invalid"
+    pdu = read_pdu(11)
     pdu.result_code
   end
 end # class Connection
