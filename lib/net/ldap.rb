@@ -995,7 +995,7 @@ class Net::LDAP
   #  dn = "mail=deleteme@example.com, ou=people, dc=example, dc=com"
   #  ldap.delete :dn => dn
   def delete(args)
-    @result = open_connection(args) do |conn|
+    @result = open_connection(args[:auth]) do |conn|
       conn.delete(args)
     end
     
