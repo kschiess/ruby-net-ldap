@@ -625,29 +625,19 @@ class Net::LDAP
 
     args[:base] ||= @base
     result_set = (args and args[:return_result] == false) ? nil : []
-
-    if @open_connection
-      @result = @open_connection.search(args) { |entry|
+    
+    @result = open_connection(args[:auth]) do |conn|
+      conn.search(args) { |entry| 
         result_set << entry if result_set
-        yield entry if block_given?
+        yield entry if block_given? 
       }
-    else
-      @result = 0
-      begin
-        conn = Net::LDAP::Connection.new(:host => @host, :port => @port,
-                                         :encryption => @encryption)
-        if (@result = conn.bind(args[:auth] || @auth)) == 0
-          @result = conn.search(args) { |entry|
-            result_set << entry if result_set
-            yield entry if block_given?
-          }
-        end
-      ensure
-        conn.close if conn
-      end
     end
-
-    @result == 0 and result_set
+    
+    raise LdapError, 
+      "#search failed, please see #get_operation_result for more details." \
+      unless @result == 0
+        
+    return result_set    
   end
 
   # #bind connects to an LDAP server and requests authentication based on

@@ -1,19 +1,14 @@
 # Encoding: UTF-8
 
+##
 # Class Net::LDAP::Filter is used to constrain LDAP searches. An object of
 # this class is passed to Net::LDAP#search in the parameter :filter.
 #
 # Net::LDAP::Filter supports the complete set of search filters available in
 # LDAP, including conjunction, disjunction and negation (AND, OR, and NOT).
-# This class supplants the (infamous) RFC 2254 standard notation for
-# specifying LDAP search filters.
-#--
-# NOTE: This wording needs to change as we will be supporting LDAPv3 search
-# filter strings (RFC 4515).
-#++
 #
 # Here's how to code the familiar "objectclass is present" filter:
-#  f = Net::LDAP::Filter.present("objectclass")
+#   f = Net::LDAP::Filter.present("objectclass")
 #
 # The object returned by this code can be passed directly to the
 # <tt>:filter</tt> parameter of Net::LDAP#search.
