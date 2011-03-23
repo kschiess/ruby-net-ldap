@@ -1,11 +1,4 @@
 .rspec
-spec/ldap.yml
 .rvmrc
 pkg/
-*.swp
-html/
-doc/
-publish/
-coverage/
-coverage.info
-.rake_tasks~
+spec/ldap_connection.rb

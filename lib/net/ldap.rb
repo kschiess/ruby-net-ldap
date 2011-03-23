@@ -624,7 +624,7 @@ class Net::LDAP
     end
 
     args[:base] ||= @base
-    result_set = args[:return_result] ? [] : nil
+    result_set = args[:return_result]==false ? nil : []
     
     @result = open_connection(args[:auth]) do |conn|
       conn.search(args) { |entry| 

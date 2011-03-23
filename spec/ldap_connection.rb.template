@@ -1,0 +1,12 @@
+
+LDAP_CONNECTION = Net::LDAP.new(
+  :host => "ldap1.example.com",
+  :port => 389,
+  # :encryption => :simple_tls,
+  :base => 'dc=example,dc=com',
+  :auth => {
+    :username => 'cn=Directory Manager', 
+    :password => '************',
+    :method => :simple
+  }
+)
