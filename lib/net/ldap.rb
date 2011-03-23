@@ -624,7 +624,7 @@ class Net::LDAP
     end
 
     args[:base] ||= @base
-    result_set = (args and args[:return_result] == false) ? nil : []
+    result_set = args[:return_result] ? [] : nil
     
     @result = open_connection(args[:auth]) do |conn|
       conn.search(args) { |entry| 
@@ -633,9 +633,12 @@ class Net::LDAP
       }
     end
     
-    raise LdapError, 
-      "#search failed, please see #get_operation_result for more details." \
-      unless @result == 0
+    if @result != 0
+      op_result = get_operation_result
+    
+      raise LdapError, 
+        "#search failed: #{op_result.message} (#{op_result.code})" 
+    end
         
     return result_set    
   end
