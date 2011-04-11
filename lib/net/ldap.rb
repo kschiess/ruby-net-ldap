@@ -875,14 +875,6 @@ class Net::LDAP
   # partial update. This is a limitation of the LDAP protocol, not of
   # Net::LDAP.
   #
-  # The lack of transactional atomicity in LDAP means that you're usually
-  # better off using the convenience methods #add_attribute,
-  # #replace_attribute, and #delete_attribute, which are are wrappers over
-  # #modify. However, certain LDAP servers may provide concurrency
-  # semantics, in which the several operations contained in a single #modify
-  # call are not interleaved with other modification-requests received
-  # simultaneously by the server. It bears repeating that this concurrency
-  # does _not_ imply transactional atomicity, which LDAP does not provide.
   def modify(args)
     @result = open_connection(args[:auth]) do |conn|
       conn.modify(args)
