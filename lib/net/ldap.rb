@@ -884,20 +884,10 @@ class Net::LDAP
   # simultaneously by the server. It bears repeating that this concurrency
   # does _not_ imply transactional atomicity, which LDAP does not provide.
   def modify(args)
-    if @open_connection
-      @result = @open_connection.modify(args)
-    else
-      @result = 0
-      begin
-        conn = Connection.new(:host => @host, :port => @port,
-                              :encryption => @encryption)
-        if (@result = conn.bind(args[:auth] || @auth)) == 0
-          @result = conn.modify(args)
-        end
-      ensure
-        conn.close if conn
-      end
+    @result = open_connection(args[:auth]) do |conn|
+      conn.modify(args)
     end
+    
     @result == 0
   end
 
