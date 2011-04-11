@@ -820,11 +820,6 @@ class Net::LDAP
   # Also see #add_attribute, #replace_attribute, or #delete_attribute, which
   # provide simpler interfaces to this functionality.
   #
-  # The LDAP protocol provides a full and well thought-out set of operations
-  # for changing the values of attributes, but they are necessarily somewhat
-  # complex and not always intuitive. If these instructions are confusing or
-  # incomplete, please send us email or create a bug report on rubyforge.
-  #
   # The :operations parameter to #modify takes an array of
   # operation-descriptors. Each individual operation is specified in one
   # element of the array, and most LDAP servers will attempt to perform the

@@ -358,13 +358,6 @@ class Net::LDAP::Connection #:nodoc:
     result_code
   end
 
-  #--
-  # TODO: need to support a time limit, in case the server fails to respond.
-  # TODO: We're throwing an exception here on empty DN. Should return a
-  # proper error instead, probaby from farther up the chain.
-  # TODO: If the user specifies a bogus opcode, we'll throw a confusing
-  # error here ("to_ber_enumerated is not defined on nil").
-  #++
   def modify(args)
     modify_dn = args[:dn] or raise "Unable to modify empty DN"
     modify_ops = []
