@@ -22,3 +22,5 @@ rescue LoadError
   warn "-> Could not load spec/ldap_connection: Please copy from ldap_connection.rb.template "+
     "and modify to your needs."
 end
+
+require 'support/ldap_test'
