@@ -1,26 +1,4 @@
 # LDAP Entry (search-result) support classes
-#
-#----------------------------------------------------------------------------
-#
-# Copyright (C) 2006 by Francis Cianfrocca. All Rights Reserved.
-#
-# Gmail: garbagecat10
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-#
-#---------------------------------------------------------------------------
 
 ##
 # Objects of this class represent individual entries in an LDAP directory.
@@ -70,18 +48,6 @@ class Net::LDAP::Entry
   def initialize(dn = nil) #:nodoc:
     @myhash = {}
     @myhash[:dn] = [dn]
-  end
-
-  ##
-  # Use the LDIF format for Marshal serialization.
-  def _dump(depth) #:nodoc:
-    to_ldif
-  end
-
-  ##
-  # Use the LDIF format for Marshal serialization.
-  def self._load(entry) #:nodoc:
-    from_single_ldif_string(entry)
   end
 
   class << self
