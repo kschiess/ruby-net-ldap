@@ -10,11 +10,10 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.date = Date.today.to_s
   s.description = %q{Pure Ruby LDAP library.}
-  s.files = %w(HISTORY.txt LICENSE Rakefile README.txt) + Dir.glob("{lib}/**/*")
+  s.files = %w(LICENSE Rakefile README.txt) + Dir.glob("{lib}/**/*")
   s.homepage = %q{http://net-ldap.rubyforge.org/}
 
   s.rdoc_options = ["--main", "README.txt"]
-  s.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.txt", "Hacking.rdoc"]
 
   s.require_paths = ["lib"]
   s.required_ruby_version = Gem::Requirement.new(">= 1.8.7")
